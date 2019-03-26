@@ -13,6 +13,7 @@ existingMatchIDs = getExistingData("matchIDs", 1)
 
 # Get the last ID so we know when to stop looking
 newMatchIDs = getMatchIDs(existingMatchIDs[len(existingMatchIDs)-1])
+
 if len(newMatchIDs) < 1:
     print("No new matches found!")
 else:

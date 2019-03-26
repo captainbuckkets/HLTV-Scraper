@@ -1,5 +1,6 @@
 from html import getHTML
 import re
+import subprocess 
 
 
 print("Initialized script.")
@@ -8,10 +9,8 @@ print("Initialized script.")
 def getMatchIDs(stop):
     # Create an offset variable for lists that are paginated on HLTV
     offset = 0
-
     # Create an array of all of the Demo URLs on the page
-    matchIDs = findMatchIDsAtURL("https://www.hltv.org/results?offset=%s" % (offset))
-
+    matchIDs = findMatchIDsAtURL("https://www.hltv.org/results?offset=%s" %(offset))
     # Determine if we need to paginate and create a variable to keep track of pages
     morePages = endCheck(matchIDs, stop)
     page = 1
@@ -19,7 +18,7 @@ def getMatchIDs(stop):
     while morePages:
         # Offset by 100 to get the next 100 matches
         offset += 100
-        moreMatchIDs = findMatchIDsAtURL("https://www.hltv.org/results?offset=%s" % (offset))
+        moreMatchIDs = findMatchIDsAtURL("https://www.hltv.org/results?offset=%s" %(offset))
 
         # Append the new IDs to the master list
         for m in moreMatchIDs:
@@ -60,7 +59,10 @@ def endCheck(matchIDs, stop):
 
 def findMatchIDsAtURL(url):
     # Get the HTML using getHTML()
-    html = getHTML(url)
+    #html = getHTML(url)
+    result = subprocess.run(['curl', url], stdout=subprocess.PIPE)
+    html = str(result.stdout)
+    #html = getHTML("https://www.google.com")
 
     # Create an array of all of the Match URLs on the page
     matchIDs = re.findall('"(.*?000"><a href="/matches/.*?)"', html)
