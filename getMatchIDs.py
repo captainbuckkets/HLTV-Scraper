@@ -15,11 +15,12 @@ def getMatchIDs(stop):
     morePages = endCheck(matchIDs, stop)
     page = 1
     print("Parsed page %s. %s IDs found so far." % (page, len(matchIDs)))
+    lastMatchID = None
     while morePages:
         # Offset by 100 to get the next 100 matches
         offset += 100
         moreMatchIDs = findMatchIDsAtURL("https://www.hltv.org/results?offset=%s" %(offset))
-
+        
         # Append the new IDs to the master list
         for m in moreMatchIDs:
             matchIDs.append(m)
@@ -27,13 +28,18 @@ def getMatchIDs(stop):
         # Continue paginating and updating the user
         page += 1
         print("Parsed page %s. %s IDs found so far." % (page, len(matchIDs)))
-        morePages = endCheck(matchIDs, stop)
+        print(len(matchIDs))
+        print(lastMatchID)
 
+        morePages = endCheck(lastMatchID, len(matchIDs))
+        lastMatchID = len(matchIDs)
+        
     # Ensure that there have been no changes to the page layout
     if len(matchIDs) % 100 != 0:
         print("HLTV altered results page layout for offset %s" % (offset))
 
     # Determines where to stop the array
+    print(stop)
     slice = matchIDs.index(stop)
     # Remove unecessary entries
     matchIDs = matchIDs[:slice]
@@ -50,12 +56,10 @@ def getMatchIDs(stop):
     print("Parsed %s page(s)." % (page))
     return matchIDs
 
-
-def endCheck(matchIDs, stop):
-    if stop in matchIDs:
+def endCheck(lastMatchID, x):
+    if lastMatchID == x:
         return False
     return True
-
 
 def findMatchIDsAtURL(url):
     # Get the HTML using getHTML()

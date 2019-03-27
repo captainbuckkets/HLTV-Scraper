@@ -10,7 +10,7 @@ tab = True
 
 # Make an array of existing Match IDs
 existingMatchIDs = getExistingData("matchIDs", 1)
-
+print(existingMatchIDs[len(existingMatchIDs)-1])
 # Get the last ID so we know when to stop looking
 newMatchIDs = getMatchIDs(existingMatchIDs[len(existingMatchIDs)-1])
 
